@@ -1,0 +1,132 @@
+<odoo>
+
+    <template id="slitting_roll_qc_template">
+        <t t-call="web.html_container">
+            <table class="border border-dark">
+                <t t-foreach="docs" t-as="o">
+                    <!--                <t t-set="lang" t-value="o.partner_id.lang"/>-->
+                    <!--                <t t-set="print_with_payments" t-value="True"/>-->
+                    <!--                <t t-debug="o.tax_totals_json"/>-->
+                    <!--                <t t-set="tax_totals" t-value="json.loads(o.tax_totals_json)"/>-->
+
+                    <t t-call="rahil_mrp.report_invoice_with_payments_a5" t-lang="lang"/>
+                </t>
+            </table>
+        </t>
+    </template>
+
+    <template id="report_invoice_with_payments_a5">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="company" t-value="env.company"/>
+                <!--                <t t-set="print_with_payments" t-value="True"/>-->
+                <t t-call="web.basic_layout">
+
+                    <div class="page">
+                        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
+                            <div>
+                                <div class="row mb8">
+                                    <div class="col-7">
+                                        <div name="company_address" class="float-end mb4" style="text-align:right">
+                                            <ul class="list-unstyled">
+                                                <t t-esc="company.company_details"/>
+                                                <li t-if="forced_vat">
+                                                    <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                                                    <span t-esc="forced_vat"/>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-5 text-end mb8">
+                                        <img style="margin-left:50%;" t-if="company.logo"
+                                             t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <style>
+                            td{
+                            text-align:center;border:2px solid black;
+                            }
+                            th{
+                            text-align:center;border:2px solid black;
+                            }
+                            tr{
+                            text-align:center;border:2px solid black;
+                            }
+                        </style>
+                        <h4 style="text-align:center;">CERTIFICATE OF ANALYSIS</h4>
+                        <table style="width:100%; border:2px solid black; height:20mm;">
+                            <tr>
+                                <td>Invoice No.</td>
+                                <td>
+                                    <t t-esc="o.lot_id.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Product</td>
+                                <td>
+                                    <t t-esc="o.qc_product.name"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Quantity</td>
+                                <td>
+                                    <!--                                <t t-esc="o.gross_weight"/>-->
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <table class="table table-sm o_main_table" style="width:100%;">
+                            <thead>
+                                <tr>
+                                    <th style="width:40% padding-top:0px; padding-bottom:0px;" name="th_properties" class="text-center">
+                                        <span>PROPERTIES</span>
+                                    </th>
+                                    <th style="padding-top:0px; padding-bottom:0px;" name="th_ref" class="text-center">
+                                        <span>REF.</span>
+                                    </th>
+                                    <th style="padding-top:0px; padding-bottom:0px;" name="th_test_method" class="text-center">
+                                        <span>TEST METHOD</span>
+                                    </th>
+                                    <th style="padding-top:0px; padding-bottom:0px;" name="th_unit" class="text-center">
+                                        <span>UNIT</span>
+                                    </th>
+                                    <th style="padding-top:0px; padding-bottom:0px;" name="th_test_value" class="text-center">
+                                        <span>TEST VALUES</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="lines" t-value="o.quality_checks_id"/>
+                                <!--                            <t t-set="notes" t-value="request.env['ir.config_parameter'].sudo().get_param('inv_notes')"/>-->
+
+                                <t t-foreach="lines" t-as="line">
+                                    <tr>
+                                        <td style="padding-top:0px; padding-bottom:0px;">
+                                            <t t-esc="line.properties.name"/>
+                                        </td>
+                                        <td style="padding-top:0px; padding-bottom:0px;">
+                                            <t t-esc="line.ref"/>
+                                        </td>
+                                        <td style="padding-top:0px; padding-bottom:0px;">
+                                            <t t-esc="line.test_parameter.name"/>
+                                        </td>
+                                        <td style="padding-top:0px; padding-bottom:0px;">
+                                            <t t-esc="line.unit"/>
+                                        </td>
+                                        <td style="padding-top:0px; padding-bottom:0px;">
+                                            <t t-esc="line.test_value"/>
+                                        </td>
+                                    </tr>
+                                </t>
+
+                            </tbody>
+                        </table>
+                        <t t-esc="company.notes"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

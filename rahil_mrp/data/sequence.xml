@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="seq_stock_lot" model="ir.sequence">
+            <field name="name">stock.lot.number</field>
+            <field name="code">stock.production.lot</field>
+            <field name="padding">4</field>
+        </record>
+    </data>
+</odoo>

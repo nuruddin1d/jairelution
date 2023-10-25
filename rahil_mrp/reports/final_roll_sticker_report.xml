@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="paperformat_final_roll_sticker" model="report.paperformat">
+        <field name="name">Final Roll Sticker</field>
+        <field name="default" eval="True"/>
+        <field name="format">custom</field>
+        <field name="page_height">93</field>
+        <field name="page_width">105</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">2</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">80</field>
+    </record>
+
+    <record id="final_roll_sticker_action" model="ir.actions.report">
+        <field name="name">Final Roll Sticker</field>
+        <field name="model">mrp.work.line</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="paperformat_id" ref="rahil_mrp.paperformat_final_roll_sticker"/>
+        <field name="report_name">rahil_mrp.final_roll_sticker_template</field>
+        <field name="report_file">rahil_mrp.final_roll_sticker_template</field>
+        <field name="print_report_name">'Final roll sticker of %s' % (object.qc_product.name)</field>
+        <field name="binding_model_id" ref="model_stock_production_lot"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="final_roll_export_sticker_action" model="ir.actions.report">
+        <field name="name">Final Roll Export Sticker</field>
+        <field name="model">mrp.work.line</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="paperformat_id" ref="rahil_mrp.paperformat_final_roll_sticker"/>
+        <field name="report_name">rahil_mrp.final_roll_export_sticker_template</field>
+        <field name="report_file">rahil_mrp.final_roll_export_sticker_template</field>
+        <field name="print_report_name">'Final roll export sticker of %s' % (object.qc_product.name)</field>
+        <field name="binding_model_id" ref="model_stock_production_lot"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="rahil_mrp_work_view_tree" model="ir.ui.view">
+            <field name="name">rahil.work.tree</field>
+            <field name="model">mrp.work</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="line_operator"/>
+                    <field name="mrp_order"/>
+                    <field name="cast_line_no"/>
+                    <field name="date"/>
+                    <field name="shift"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'confirm'"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="rahil_mrp_spot_gsm_view_tree" model="ir.ui.view">
+            <field name="name">rahil.mrp.spot.gsm.view.tree</field>
+            <field name="model">spot.gsm</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="readings"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="rahil_mrp_spot_gsm_view_form" model="ir.ui.view">
+            <field name="name">rahil.mrp.spot.gsm.view.form</field>
+            <field name="model">spot.gsm</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="readings"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="rahil_mrp_work_line_view_tree" model="ir.ui.view">
+            <field name="name">rahil.work.line.tree</field>
+            <field name="model">mrp.work.line</field>
+            <field name="arch" type="xml">
+                <tree create="0" delete="0" decoration-warning="qc_status == 'hold'" decoration-info="qc_status == 'confirm'" decoration-danger="qc_status == 'reject'">
+                    <field name="lot_id"/>
+                    <field name="qc_product"/>
+                    <field name="qc_assistant"/>
+                    <field name="qc_date"/>
+                    <field name="qc_status" optional="show" widget="badge" decoration-warning="qc_status == 'hold'" decoration-info="qc_status == 'confirm'" decoration-danger="qc_status == 'reject'"/>
+<!--                    <field name="out_time" widget="float_time"/>-->
+<!--                    <field name="duration" widget="float_time" optional="show"/>-->
+<!--                    <field name="length" optional="show"/>-->
+<!--                    <field name="gross_weight" optional="show"/>-->
+<!--                    <field name="core_weight" optional="show"/>-->
+<!--                    <field name="net_weight" optional="show"/>-->
+<!--                    <field name="wastage" optional="show"/>-->
+                </tree>
+            </field>
+        </record>
+
+        <record id="rahil_mrp_work_view_form" model="ir.ui.view">
+            <field name="name">rahil.work.form</field>
+            <field name="model">mrp.work</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                         <button string="Confirm" name="action_set_to_confirm" type="object" states="draft"
+                                class="oe_highlight"/>
+                        <button string="Reset to Draft" name="action_set_to_draft" type="object" states="confirm"
+                                class="oe_highlight"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="line_operator" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <field name="cast_line_no" attrs="{'required':[('work_type', '=', 'cast')], 'invisible': [('work_type', 'in', ['slit','mate'])]}"/>
+                                <field name="slitter_line" attrs="{'readonly':[('state','=','confirm')], 'invisible': [('work_type', 'in', ['cast','mate'])]}"/>
+                                <field name="work_type" invisible="1"/>
+                                <field name="mrp_order" domain="[('line_no','=', cast_line_no),('state', 'in', ['confirmed','progress'])]" attrs="{'readonly':[('state','=','confirm')]}"/>
+                            </group>
+                            <group>
+                                <field name="date" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <field name="shift" attrs="{'readonly':[('state','=','confirm')]}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Work line" name="work_line">
+                                <field name="product_id" invisible="1"/>
+                                <field name="product_tracking" invisible="1"/>
+                                <field name="work_line_ids" attrs="{'readonly':[('state','=','confirm')]}">
+                                    <tree editable="bottom">
+                                        <field name="work_id" invisible="1"/>
+<!--                                        <field name="roll_no"/>-->
+                                        <field name="lot_id" domain="[('product_id', '=', parent.product_id)]" context="{'default_product_id': parent.product_id}" />
+                                        <button name="generate_lot_number" type="object" class="btn btn-primary fa fa-plus-square-o" aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" attrs="{'invisible': [('lot_id', '!=', False)]}"/>
+                                        <field name="micron"/>
+                                        <field name="size"/>
+                                        <field name="Type"/>
+                                        <field name="in_time" widget="float_time"/>
+                                        <field name="out_time" widget="float_time"/>
+                                        <field name="duration" widget="float_time" optional="show"/>
+                                        <field name="length" optional="show"/>
+                                        <field name="gross_weight" optional="show"/>
+                                        <field name="core_weight" optional="show"/>
+                                        <field name="net_weight" optional="show"/>
+                                        <field name="no_of_tags" optional="hide"/>
+                                        <field name="defect_reason" optional="show"/>
+                                        <field name="wastage" optional="show"/>
+                                        <field name="remark" optional="hide"/>
+                                        <field name="arm" optional="show"/>
+                                        <field name="no_of_joint" optional="show"/>
+                                        <field name="joint_reason" optional="show"/>
+                                        <field name="qc_status" optional="show" widget="badge" decoration-info="qc_status == 'hold'" decoration-success="qc_status == 'confirm'" decoration-warning="qc_status == 'reject'"/>
+                                        <field name="product_core" optional="hide"/>
+                                        <field name="sale_ct" optional="hide"/>
+                                        <field name="sale_cof" optional="hide"/>
+                                        <field name="roll_od" optional="hide"/>
+                                        <field name="order_ids" optional="hide" widget="many2many_tags" invisible="1"/>
+                                        <field name="order_id" optional="show"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <group>
+                                <field name="total_production"/>
+                                <field name="total_wastage"/>
+                            </group>
+                            <group>
+                                <field name="wastage_reason" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <field name="total_breakdown" widget="float_time"/>
+                            </group>
+                        </group>
+                        <group string="Breakdown Analysis">
+                            <field name="breakdown_analysis_ids" nolabel="1" attrs="{'readonly':[('state','=','confirm')]}">
+                                <tree editable="bottom">
+                                    <field name="breakdown_reason" string="Breakdown Reason"/>
+                                    <field name="from_time" string="From Time" widget="float_time"/>
+                                    <field name="to_time" string="To Time" widget="float_time"/>
+                                    <field name="total_hours" string="Total Hours" widget="float_time"/>
+                                    <field name="remark" string="Remark"/>
+                                    <field name="work_id"  invisible="1"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="quick_create_rahil_mrp_work_view_form" model="ir.ui.view">
+            <field name="name">rahil.work.form</field>
+            <field name="model">mrp.work</field>
+            <field name="priority">1</field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                         <button string="Confirm" name="action_set_to_confirm" type="object" states="draft"
+                                class="oe_highlight"/>
+                        <button string="Reset to Draft" name="action_set_to_draft" type="object" states="confirm"
+                                class="oe_highlight"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="line_operator" attrs="{'readonly':[('state','=','confirm')]}"/>
+                                <field name="cast_line_no" attrs="{'readonly':[('state','=','confirm')], 'required':[('work_type', '=', 'cast')]}" invisible="1"/>
+                                <field name="slitter_line" attrs="{'readonly':[('state','=','confirm')]}" invisible="1"/>
+                                <field name="work_type" invisible="1"/>
+                                <field name="mrp_order" domain="[('line_no','=', cast_line_no),('state', 'in', ['confirmed','progress'])]" attrs="{'readonly':[('state','=','confirm')]}" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="date" attrs="{'readonly':[('state','=','confirm')]}" invisible="1"/>
+                                <field name="shift" attrs="{'readonly':[('state','=','confirm')]}" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Work line" name="work_line">
+                                <field name="product_id" invisible="1"/>
+                                <field name="product_tracking" invisible="1"/>
+                                <field name="work_line_ids" attrs="{'readonly':[('state','=','confirm')]}">
+                                    <tree editable="bottom">
+                                        <field name="work_id" invisible="1"/>
+<!--                                        <field name="roll_no"/>-->
+                                        <field name="lot_id" domain="[('product_id', '=', parent.product_id)]" context="{'default_product_id': parent.product_id}"/>
+                                        <button name="generate_lot_number" type="object" class="btn btn-primary fa fa-plus-square-o" aria-label="Creates a new serial/lot number" title="Creates a new serial/lot number" role="img" attrs="{'invisible': [('lot_id', '!=', False)]}"/>
+                                        <field name="micron"/>
+                                        <field name="size"/>
+                                        <field name="Type"/>
+                                        <field name="in_time" widget="float_time"/>
+                                        <field name="out_time" widget="float_time"/>
+                                        <field name="duration" widget="float_time" optional="show"/>
+                                        <field name="length" optional="show"/>
+                                        <field name="gross_weight" optional="show"/>
+                                        <field name="core_weight" optional="show"/>
+                                        <field name="net_weight" optional="show"/>
+                                        <field name="no_of_tags" optional="hide"/>
+                                        <field name="defect_reason" optional="show"/>
+                                        <field name="wastage" optional="show"/>
+                                        <field name="remark" optional="hide"/>
+                                        <field name="arm" optional="show"/>
+                                        <field name="no_of_joint" optional="show"/>
+                                        <field name="joint_reason" optional="show"/>
+                                        <field name="qc_status" optional="show" widget="badge" decoration-info="qc_status == 'hold'" decoration-success="qc_status == 'confirm'" decoration-warning="qc_status == 'reject'"/>
+                                        <field name="product_core" optional="hide"/>
+                                        <field name="sale_ct" optional="hide"/>
+                                        <field name="sale_cof" optional="hide"/>
+                                        <field name="roll_od" optional="hide"/>
+                                        <field name="work_type" invisible="1"/>
+                                        <field name="order_ids" optional="hide" widget="many2many_tags" invisible="1"/>
+                                        <field name="order_id" attrs="{'readonly': [('parent.work_type','in', ['cast','mate', 'rewind'])]}"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="rahil_work_search_view" model="ir.ui.view">
+            <field name="name">rahil.work.search.view</field>
+            <field name="model">mrp.work</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="state"/>
+                    <field name="date"/>
+                    <field name="shift"/>
+                    <field name="line_operator"/>
+                    <field name="cast_line_no"/>
+                    <filter string="Draft" name="state_draft"
+                            domain="[('state', '=', 'draft')]"
+                            help="Show all Draft Work Entry"/>
+                    <filter string="Confirm" name="state_confirm"
+                            domain="[('state', '=', 'confirm')]"
+                            help="Show all confirm Work Entry"/>
+                    <filter string="Today's Entry" name="today_entry"
+                            domain="[('date', '=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00'))]"
+                            help="Show all Today's Work Entry"/>
+                    <group expand="0" string="Group By">
+                        <filter
+                                name="state"
+                                string="State"
+                                context="{'group_by':'state'}"
+                        />
+                        <filter
+                                name='date'
+                                string="Order By date"
+                                context="{'group_by':'date'}"
+                        />
+                        <filter
+                                name='shift'
+                                string="Order By Shift"
+                                context="{'group_by':'shift'}"
+                        />
+                        <filter
+                                name='line_operator'
+                                string="Operator"
+                                context="{'group_by':'line_operator'}"
+                        />
+                        <filter
+                                name='cast_line_no'
+                                string="Cast Line"
+                                context="{'group_by':'cast_line_no'}"
+                        />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_work_entry_rahil" model="ir.actions.act_window">
+            <field name="name">Production Entry</field>
+            <field name="res_model">mrp.work</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('rahil_mrp.rahil_mrp_work_view_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('rahil_mrp.rahil_mrp_work_view_form')})]"/>
+
+        </record>
+
+        <record id="action_spot_gsm_entry_rahil" model="ir.actions.act_window">
+            <field name="name">Spot GSM</field>
+            <field name="res_model">spot.gsm</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+         <menuitem name="Production Entry" id="work_entry_rahil_menu" action="action_work_entry_rahil"
+              sequence="1" parent="mrp.menu_mrp_manufacturing" groups="rahil_mrp.production_entry_user"/>
+
+        <menuitem name="Spot GSM" id="spot_gsm_rahil_menu" action="action_spot_gsm_entry_rahil"
+              sequence="1" parent="mrp.menu_mrp_configuration"/>
+
+    </data>
+</odoo>

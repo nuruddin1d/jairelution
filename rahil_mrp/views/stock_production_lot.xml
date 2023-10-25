@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="rahil_mrp_lot_view_form" model="ir.ui.view">
+            <field name="name">rahil.lot.form.view</field>
+            <field name="model">stock.production.lot</field>
+            <field name="inherit_id" ref="stock.view_production_lot_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//form//sheet//group[@name='main_group']//group//field[@name='product_id']" position="before">
+                    <field name="roll_count"/>
+                    <field name="micron"/>
+                    <field name="length"/>
+                    <field name="size"/>
+                    <field name="type"/>
+                    <field name="gross_weight"/>
+                    <field name="no_of_joint"/>
+                    <field name="product_core"/>
+                    <field name="sale_ct"/>
+                    <field name="sale_cof"/>
+                    <field name="roll_od"/>
+                    <field name="order_ids" widget="many2many_tags" invisible="1"/>
+                    <field name="order_id" attrs="{'invisible': [('order_id','=',False)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

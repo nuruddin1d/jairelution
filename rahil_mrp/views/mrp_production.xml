@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rahil_mrp_production_form_view" model="ir.ui.view">
+        <field name="name">mrp.production.view.inherited</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="replace">
+                <header>
+                    <field name="confirm_cancel" invisible="1"/>
+                    <field name="show_lock" invisible="1"/>
+                    <button name="button_mark_done"
+                            attrs="{'invisible': ['|', '|', ('state', 'in', ('draft', 'cancel', 'hold','done', 'to_close')), ('qty_producing', '=', 0), ('move_raw_ids', '!=', [])]}"
+                            string="Validate" type="object" class="oe_highlight"
+                            confirm="There are no components to consume. Are you still sure you want to continue?"
+                            data-hotkey="g"/>
+                    <button name="button_mark_done"
+                            attrs="{'invisible': ['|', '|', ('state', 'in', ('draft', 'cancel', 'hold','done', 'to_close')), ('qty_producing', '=', 0), ('move_raw_ids', '=', [])]}"
+                            string="Validate" type="object" class="oe_highlight" data-hotkey="g"/>
+                    <button name="button_mark_done"
+                            attrs="{'invisible': [                         '|',                         ('move_raw_ids', '=', []),                         '&amp;',                         '|',                         ('state', 'not in', ('confirmed', 'progress')),                         ('qty_producing', '!=', 0),                         ('state', '!=', 'to_close')]}"
+                            string="Mark as Done" type="object" class="oe_highlight" data-hotkey="g"/>
+                    <button name="button_mark_done"
+                            attrs="{'invisible': [                         '|',                         ('move_raw_ids', '!=', []),                         '&amp;',                         '|',                         ('state', 'not in', ('confirmed', 'progress')),                         ('qty_producing', '!=', 0),                         ('state', '!=', 'to_close')]}"
+                            string="Mark as Done" type="object" class="oe_highlight" data-hotkey="g"
+                            confirm="There are no components to consume. Are you still sure you want to continue?"/>
+                    <button name="action_confirm" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Confirm"
+                            type="object" class="oe_highlight" data-hotkey="v"/>
+                    <button name="action_hold"
+                            attrs="{'invisible': [('state', 'in', ('draft','done', 'hold', 'cancel','to_close'))]}" string="Hold"
+                            type="object" class="oe_highlight" data-hotkey="v"/>
+                    <button name="action_resume" attrs="{'invisible': [('state', '!=', 'hold')]}" string="Resume"
+                            type="object" class="oe_highlight" data-hotkey="v"/>
+                    <button name="do_unreserve" type="object" string="Unreserve"
+                            attrs="{'invisible': ['|',('unreserve_visible', '=', False),('state', '=', 'hold')]}"
+                            data-hotkey="w"/>
+                    <button name="button_scrap" type="object" string="Scrap"
+                            attrs="{'invisible': [('state', 'in', ('cancel', 'hold','draft'))]}" data-hotkey="z"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,hold,progress,done"/>
+                    <button name="action_toggle_is_locked"
+                            attrs="{'invisible': ['|','|',('show_lock', '=', False), ('is_locked', '=', False), ('state', '=', 'hold')]}"
+                            string="Unlock"
+                            groups="mrp.group_mrp_manager" type="object"
+                            help="Unlock the manufacturing order to adjust what has been consumed or produced."
+                            data-hotkey="l"/>
+                    <button name="action_toggle_is_locked"
+                            attrs="{'invisible': ['|', ('show_lock', '=', False), ('is_locked', '=', True),  ('state', '=', 'hold')]}"
+                            string="Lock"
+                            groups="mrp.group_mrp_manager" type="object"
+                            help="Lock the manufacturing order to prevent changes to what has been consumed or produced."
+                            data-hotkey="l"/>
+                    <field name="show_serial_mass_produce" invisible="1"/>
+                    <button name="action_cancel" type="object" string="Cancel" data-hotkey="z"
+                            attrs="{'invisible': ['|', '|', ('id', '=', False), ('state', 'in', ('done', 'cancel', 'hold')), ('confirm_cancel', '=', True)]}"/>
+                    <button name="action_cancel" type="object" string="Cancel" data-hotkey="z"
+                            attrs="{'invisible': ['|', '|', ('id', '=', False), ('state', 'in', ('done', 'cancel', 'hold')), ('confirm_cancel', '=', False)]}"
+                            confirm="Some product moves have already been confirmed, this manufacturing order can't be completely cancelled. Are you still sure you want to process ?"/>
+                    <button name="quick_create_work" type="object" string="Enter Lot Number"
+                            options="{&quot;warn&quot;: true}"
+                            attrs="{'invisible': [('state', 'in', ('draft','process','hold','done','cancel'))]}"/>
+                </header>
+            </xpath>
+            <xpath expr="//form/sheet/div[hasclass('oe_title')]" position="replace">
+                <div class="row">
+                    <h1>
+                        <field name="priority" widget="priority" class="mr-3"/>
+                        <field name="name" placeholder="Manufacturing Reference" nolabel="1"/>
+                    </h1>
+                    <h1 style="padding-left: 450px;">
+                        <field name="line_no" nolabel="1"/>
+                    </h1>
+                </div>
+            </xpath>
+            <field name="product_id" position="before">
+                <field name="partner_ids" string="Customer" widget="many2many_tags"
+                       attrs="{'invisible':[('is_slitter_view','=', True)]}"/>
+            </field>
+            <field name="product_id" position="attributes">
+                <attribute name="domain">[('id', 'in', mrp_product_ids)]</attribute>
+            </field>
+            <field name="product_id" position="after">
+                <field name="mrp_product_ids" widget="many2many" invisible="1"/>
+                <field name="is_direct_production" invisible="1"/>
+                <field name="is_slitter_view" invisible="1"/>
+                <field name="micron" invisible="1"/>
+            </field>
+            <xpath expr="//sheet/group/group[2]/label" position="before">
+                <field name="order_ids" widget="many2many_tags" domain="['|',('partner_id', 'in', partner_ids),('state', '=', 'sale'),('planing_state','in', ['unplanned', 'partial_plan'])]"
+                       attrs="{'invisible':[('is_slitter_view','=', True)]}"/>
+            </xpath>
+            <xpath expr="//form//sheet//group" position="after">
+                <group name="mass_production" string="Produce Mass Sizes"
+                       attrs="{'invisible':['|',('is_direct_production','=', False), ('is_slitter_view','=', True)]}">
+                    <field name="production_line" nolabel="1"
+                           context="{'tree_view_ref': 'rahil_mrp.rahil_mrp_production_line_tree_view'}"/>
+                </group>
+                <group name="similar_order_line" string="Similar Order Lines"
+                       attrs="{'invisible':['|',('is_direct_production','=',True), ('is_slitter_view','=', True)]}">
+                    <group>
+                        <button name="%(act_open_select_order_line_view)d" type="action" string="Select Order Lines"
+                                class="oe_highlight"/>
+                    </group>
+                    <field name="production_line" nolabel="1"
+                           context="{'tree_view_ref': 'rahil_mrp.rahil_mrp_production_line_tree_view'}"/>
+                </group>
+                <group name="roll_line" string="Roll Lines" attrs="{'invisible':[('is_slitter_view','=', True)]}">
+                    <group>
+                        <field name="trim_size"/>
+                    </group>
+                    <group>
+                        <field name="total_size" string="Jumbo Roll Size"/>
+                    </group>
+                    <field name="roll_line" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="jumbo_roll_length" force_save="1"/>
+                            <field name="jumbo_roll_qty"/>
+                            <field name="weight_per_roll" string="Weight/Roll"/>
+                            <field name="roll_weight_with_trim" string="Roll Weight With Trim"/>
+                            <field name="roll_weight_without_trim" string="Roll Weight Without Trim"/>
+                        </tree>
+                    </field>
+                    <group>
+                        <field name="roll_weight_with_trim" string="Total Roll Weight With Trim"/>
+                    </group>
+                    <group>
+                        <field name="roll_weight_without_trim" string="Total Roll Weight Without Trim"/>
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//form//sheet//page[@name='components']//field[@name='move_raw_ids']//tree//field[@name='product_id']"
+                   position="before">
+                <field name="extruder_type" string="Extruder Type"
+                       attrs="{'column_invisible':[('parent.is_slitter_view','=', True)]}"/>
+                <field name="material" string="Component Type"
+                       attrs="{'column_invisible':[('parent.is_slitter_view','=', True)]}"/>
+            </xpath>
+            <xpath expr="//form//sheet//page[@name='components']//field[@name='move_raw_ids']//tree//field[@name='product_uom']"
+                   position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//form//sheet//group//group//field[@name='bom_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//form//sheet//page[@name='components']//field[@name='move_raw_ids']//tree//field[@name='product_id']"
+                   position="after">
+                <field name="calculate_qty" attrs="{'column_invisible':[('parent.is_slitter_view','=', True)]}"/>
+            </xpath>
+            <xpath expr="//form//sheet//page[@name='components']//field[@name='move_raw_ids']//tree//field[@name='product_uom_qty']"
+                   position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr="//form//sheet//page[@name='components']//field[@name='move_raw_ids']//tree//field[@name='product_uom']"
+                   position="before">
+                <field name="row_unit" attrs="{'column_invisible':[('parent.is_slitter_view','=', True)]}"/>
+                <field name="layer" attrs="{'column_invisible':[('parent.is_slitter_view','=', True)]}"/>
+                <field name="films" attrs="{'column_invisible':[('parent.is_slitter_view','=', True)]}"/>
+            </xpath>
+            <xpath expr="//form//sheet//page[@name='components']//field[@name='move_raw_ids']" position="before">
+                <group string="Extruders" attrs="{'invisible':[('is_slitter_view','=', True)]}">
+                    <field name="extruder_line_ids" nolabel="1">
+                        <tree editable="bottom" create="0" delete="0">
+                            <field name="mrp_order_id" invisible="1"/>
+                            <field name="extruder_type"/>
+                            <field name="extruder_use" sum="Total Extruder Use"/>
+                            <field name="extruder_total"/>
+                            <field name="total_layer"/>
+                            <field name="total_films"/>
+                        </tree>
+                    </field>
+                </group>
+            </xpath>
+            <xpath expr="//form//sheet//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object" name="action_view_work_entry" icon="fa-life-ring">
+                    <field string="Roll Details" name="work_count" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//form//sheet//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" type="object" name="action_view_sale_order" icon="fa-book">
+                    <field string="Sale orders" name="sale_order_counts" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//form//sheet//group//group//div[2]//field[@name='lot_producing_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//form//sheet//group//group//label[@for='lot_producing_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//form//sheet//group//group//div[2]//button[@name='action_generate_serial']"
+                   position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="rahil_mrp_production_line_tree_view" model="ir.ui.view">
+        <field name="name">mrp.production.view.line.inherited</field>
+        <field name="model">mrp.production.line</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="so_line_id" string="Order Line" readonly="1"
+                       attrs="{'column_invisible': [('parent.is_direct_production', '=', True)]}"/>
+                <field name="product_id" string="Product"
+                       attrs="{'column_invisible': [('parent.is_direct_production', '=', False)]}"/>
+                <field name="so_line_qty" string="Order Qty" readonly="0"
+                       attrs="{'readonly': [('is_direct_production_line', '=' , False)]}"/>
+                <field name="so_line_uom_id" string="UoM" force_save="1"/>
+                <field name="so_line_clarity" string="Clarity" readonly="0"
+                       attrs="{'readonly': [('is_direct_production_line', '=' , False)]}"/>
+                <field name="so_line_density" string="Optical Density" readonly="0"
+                       attrs="{'readonly': [('is_direct_production_line', '=' , False)]}"/>
+                <field name="so_line_sit" string="SIT" readonly="0"
+                       attrs="{'readonly': [('is_direct_production_line', '=' , False)]}"/>
+                <field name="so_line_high_bond" string="High Bond" readonly="0"
+                       attrs="{'readonly': [('is_direct_production_line', '=' , False)]}"/>
+                <field name="so_line_size" string="Size"/>
+                <field name="multiply" string="Multiply"/>
+                <field name="so_line_weight" string="Weight"/>
+                <field name="is_completed"/>
+                <field name="is_direct_production_line" invisible="1"/>
+                <field name="so_product_core" string="Core"/>
+                <field name="so_sale_ct" string="CT"/>
+                <field name="so_sale_cof" string="COF"/>
+                <field name="so_roll_od" string="Roll OD"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="action_mrp_direct_production_rahil" model="ir.actions.act_window">
+        <field name="name">Direct Planning</field>
+        <field name="res_model">mrp.production</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_is_direct_production': True}</field>
+        <field name="domain">[('is_direct_production','=', True)]</field>
+    </record>
+
+    <record model="ir.ui.menu" id="mrp.menu_mrp_root">
+        <field name="name">Planning</field>
+    </record>
+
+    <record model="ir.ui.menu" id="mrp.menu_mrp_production_action">
+        <field name="name">Planning Orders</field>
+        <field name="groups_id" eval="[(4, ref('rahil_mrp.cast_line_manufacturing'))]"/>
+    </record>
+
+    <record model="ir.actions.act_window" id="mrp.mrp_production_action">
+        <field name="name">Planing Orders</field>
+        <field name="domain">[('work_order_type', '=', 'cast'),('is_slitter_view','=', False),('is_direct_production','=', False)]</field>
+    </record>
+
+<!--    <record model="ir.actions.act_window" id="mrp.mrp_production_action">-->
+<!--        <field name="domain">[('is_slitter_view','=', False)]</field>-->
+<!--    </record>-->
+
+    <menuitem name="Direct Planning" id="mrp_direct_production_rahil_menu" action="action_mrp_direct_production_rahil"
+              sequence="1" parent="mrp.menu_mrp_manufacturing" groups="rahil_mrp.cast_line_manufacturing"/>
+
+    <menuitem id="mrp.mrp_planning_menu_root"
+              name="Planning"
+              parent="mrp.menu_mrp_root"
+              sequence="15" groups="make_invisible"/>
+    <menuitem id="mrp.menu_procurement_compute_mrp"
+              action="stock.action_procurement_compute"
+              parent="mrp.mrp_planning_menu_root"
+              sequence="135" groups="make_invisible"/>
+    <menuitem id="mrp.menu_mrp_unbuild"
+              name="Unbuild Orders"
+              parent="mrp.menu_mrp_manufacturing"
+              sequence="20" groups="make_invisible"/>
+    <menuitem id="mrp.menu_mrp_bom_form_action"
+              action="mrp.mrp_bom_form_action"
+              parent="mrp.menu_mrp_bom"
+              sequence="13" groups="make_invisible"/>
+    <menuitem id="mrp.menu_mrp_traceability"
+          name="Lots/Serial Numbers"
+          parent="mrp.mrp_planning_menu_root"
+          action="stock.action_production_lot_form"
+          groups="stock.group_production_lot"
+          sequence="15"/>
+
+</odoo>

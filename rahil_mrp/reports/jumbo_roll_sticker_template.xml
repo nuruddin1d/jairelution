@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <template id="jumbo_roll_sticker_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <div class="container-fluid">
+                         <style>
+                        table{
+                        width:100%; border:2px solid black; height:75mm;
+                        }
+                        td{
+                        text-align:center;border:2px solid black;padding-top:2px;padding-bottom:1px;
+                        }
+                    </style>
+                    <table>
+                        <tr>
+                            <td>Roll No.</td>
+                            <td>
+                                <t t-esc="o.lot_id.name"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Size X Micron</td>
+                            <td>
+                                <t t-esc="o.size"/>
+                                <span>X</span>
+                                <t t-esc="o.micron"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Gross Weight</td>
+                            <td>
+                                <t t-esc="o.gross_weight"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Core Weight</td>
+                            <td>
+                                <t t-esc="o.core_weight"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Net Weight</td>
+                            <td>
+                                <t t-esc="o.net_weight"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Length</td>
+                            <td>
+                                <t t-esc="o.length"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Joint</td>
+                            <td>
+                                <t t-esc="o.no_of_joint"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Remark</td>
+                            <td>
+                                <t t-esc="o.remark"/>
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <template id="final_roll_sticker_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <div class="page">
+                        <style>
+                            table{
+                            width:100%;
+                            font-size:10px;
+                            }
+                            td{
+                            padding:1px;
+                            }
+                            img{
+                            padding-bottom:2px;
+                            }
+                        </style>
+                        <div class="container-fluid">
+                            <table class="border border-dark" style="padding:0px;">
+                                <div class="text-center">
+                                    <img t-att-src="'data:image/png;base64,%s' % to_text(o.env.company.logo)"
+                                         height="40"/>
+                                </div>
+                                <tr class="border-bottom border-dark">
+                                    <td>Product:</td>
+                                    <td colspan="3">
+                                        <strong>
+                                            <t t-esc="o.qc_product.name"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr class="border-bottom border-dark">
+                                    <td>Product Type:</td>
+                                    <td colspan="2">
+                                        <strong>
+                                            <t t-esc="o.qc_product.categ_id.name"/>
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <strong>
+                                            <t t-esc="o.qc_product.categ_id.category_code"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr class="border-bottom border-dark">
+                                    <td>Thickness:</td>
+                                    <td>
+                                        <strong>
+                                            <t t-esc="o.micron"/>
+                                        </strong>
+                                    </td>
+                                    <td>Trt In:</td>
+                                    <td></td>
+                                </tr>
+                                <tr class="border-bottom border-dark">
+                                    <td>Width:</td>
+                                    <td>
+                                        <strong>
+                                            <t t-esc="o.size"/>
+                                        </strong>
+                                    </td>
+                                    <td>Trt Out:</td>
+                                    <td></td>
+                                </tr>
+                                <tr class="border-bottom border-dark">
+                                    <td>Length:</td>
+                                    <td>
+                                        <strong>
+                                            <t t-esc="o.length"/>
+                                        </strong>
+                                    </td>
+                                    <td>O.D.:</td>
+                                    <td></td>
+                                </tr>
+                                <tr class="border-bottom border-dark">
+                                    <td>Gross Weight:</td>
+                                    <td>
+                                        <strong>
+                                            <t t-esc="o.gross_weight"/>
+                                        </strong>
+                                    </td>
+                                    <td>Joints:</td>
+                                    <td></td>
+                                </tr>
+                                <tr class="border-bottom border-dark">
+                                    <td>Net Weight:</td>
+                                    <td colspan="3">
+                                        <strong>
+                                            <t t-esc="o.net_weight"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Roll Code:</td>
+                                    <td colspan="3">
+                                        <strong>
+                                            <t t-esc="o.lot_id.name"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                                <tr class="border-left border-dark">
+                                    <td colspan="4" style="text-align: center; padding-bottom: 5px;">
+                                        <div t-field="o.lot_id.name"
+                                             t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 700,  'img_style': 'width:100%;'}"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <h6 style="text-align: center;">
+                                            <t t-esc="o.env.company.name"/>
+                                        </h6>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

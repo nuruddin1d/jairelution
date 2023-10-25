@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="rahil_mrp_sales_order_view_form" model="ir.ui.view">
+            <field name="name">rahil.sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="l10n_in_sale.view_order_form_inherit_l10n_in_sale"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='l10n_in_gst_treatment']" position="after">
+                        <field name="planing_state" widget="badge" readonly="1" decoration-info="planing_state == 'unplanned'" decoration-success="planing_state == 'planed'" decoration-warning="planing_state == 'partial_plan'"/>
+                </xpath>
+                <xpath expr="//page[@name='order_lines']//field[@name='order_line']//tree//field[@name='price_subtotal']"
+                       position="after">
+                    <field name="line_planing_state" optional="hide" widget="badge" decoration-info="line_planing_state == 'unplanned'" decoration-success="line_planing_state == 'planed'"/>
+                    <field name="mrp_order_id" optional="hide" readonly="1" widget="many2many_tags"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="rahil_mrp_sale_order_view_group_by" model="ir.ui.view">
+            <field name="name">rahil_sale.order.group.by</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//search//group//filter[@name='order_month']" position="after">
+                    <filter string="Planning State" name="planing_state" domain="[]" context="{'group_by': 'planing_state'}"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

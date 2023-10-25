@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mrp_production_line,access_mrp_production_line,model_mrp_production_line,base.group_user,1,1,1,1
+access_mrp_roll_line,access_mrp_roll_line,model_mrp_roll_line,base.group_user,1,1,1,1
+access_select_order_line,access_select_order_line,model_select_order_line,base.group_user,1,1,1,1
+access_mrp_work,access_mrp_work,model_mrp_work,base.group_user,1,1,1,1
+access_mrp_work_line,access_mrp_work_line,model_mrp_work_line,base.group_user,1,1,1,1
+access_breakdown_reason,access_breakdown_reason,model_breakdown_reason,base.group_user,1,1,1,1
+access_breakdown_analysis,access_breakdown_analysis,model_breakdown_analysis,base.group_user,1,1,1,1
+access_mrp_extruder,access_mrp_extruder,model_mrp_extruder,base.group_user,1,1,1,1
+access_spot_gsm,access_spot_gsm,model_spot_gsm,base.group_user,1,1,1,1

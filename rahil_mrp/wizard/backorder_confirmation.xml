@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="inherit_view_backorder_confirmation" model="ir.ui.view">
+        <field name="name">inherit.view.backorder.confirmation</field>
+        <field name="model">mrp.production.backorder</field>
+        <field name="inherit_id" ref="mrp.view_mrp_production_backorder_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//footer//button[@name='action_backorder']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//footer//button[@name='action_close_mo']" position="attributes">
+                <attribute name="string">Process</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

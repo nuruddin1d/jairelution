@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="make_invisible" model="res.groups">
+        <field name="name">Invisible</field>
+    </record>
+
+    <record id="cast_line_manufacturing" model="res.groups">
+        <field name="name">Cast Line User</field>
+    </record>
+
+    <record id="slitting_group" model="res.groups">
+        <field name="name">Slitting User</field>
+    </record>
+
+    <record id="rewinding_group" model="res.groups">
+        <field name="name">Rewinding User</field>
+    </record>
+
+    <record id="metalized_user" model="res.groups">
+        <field name="name">Metalized User</field>
+    </record>
+
+    <record id="quality_control_user" model="res.groups">
+        <field name="name">QC User</field>
+    </record>
+
+    <record id="production_entry_user" model="res.groups">
+        <field name="name">Production Entry User</field>
+    </record>
+
+</odoo>

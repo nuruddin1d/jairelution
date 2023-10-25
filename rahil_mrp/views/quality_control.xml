@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rahil_mrp_qc_view_form" model="ir.ui.view">
+        <field name="name">rahil.qc.form</field>
+        <field name="model">mrp.work.line</field>
+        <field name="arch" type="xml">
+            <form create="0">
+                <header>
+                    <field name="qc_status" widget="statusbar"/>
+                    <button string="Confirm" name="action_set_to_confirm" type="object" class="oe_highlight"
+                            attrs="{'invisible':[('qc_status','in',['confirm','reject'])]}"/>
+                    <button string="Hold" name="action_set_to_hold" type="object" class="oe_highlight"
+                            attrs="{'invisible':[('qc_status','in',['hold','reject', 'confirm'])]}"/>
+                    <button string="Reject" name="action_set_to_reject" type="object" class="btn-danger"
+                            attrs="{'invisible':[('qc_status','in', ['confirm', 'reject'])]}"/>
+                    <button string="Recheck" name="action_set_to_recheck" type="object" class="oe_highlight"
+                            attrs="{'invisible':[('qc_status','in', ['draft'])]}"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h2>
+                            <field name="lot_id" readonly="1"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="qc_assistant" attrs="{'readonly':[('qc_status','=','confirm')]}" required='1'/>
+                            <field name="qc_product" attrs="{'readonly':[('qc_status','=','confirm')]}" required='1'/>
+                        </group>
+                        <group>
+                            <field name="qc_date" attrs="{'readonly':[('qc_status','=','confirm')]}" required='1'/>
+                            <field name="qc_shift" attrs="{'readonly':[('qc_status','=','confirm')]}" required='1'/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Quality Analysis" name="quality_analysis"
+                              attrs="{'readonly': [('qc_status', '=', 'confirm')]}">
+<!--                            <group>-->
+<!--                                <field name="quality_check_id">-->
+<!--                                    <tree create="1" ediatble="bottom">-->
+<!--                                        <field name="name"/>-->
+<!--                                        <field name="ref"/>-->
+<!--                                        <field name="test_parameter"/>-->
+<!--                                        <field name="unit"/>-->
+<!--                                        <field name="test_value"/>-->
+<!--                                    </tree>-->
+<!--                                </field>-->
+
+                                <!--                                <group>-->
+                                <!--                                    <field name="qc_width" attrs="{'readonly':[('qc_status','=','confirm')]}"/>-->
+                                <!--                                    <field name="qc_gsm" attrs="{'readonly':[('qc_status','=','confirm')]}"/>-->
+                                <!--                                </group>-->
+                                <!--                                <group>-->
+                                <!--                                    <field name="qc_thickness" attrs="{'readonly':[('qc_status','=','confirm')]}"/>-->
+                                <!--                                    <field name="qc_od" attrs="{'readonly':[('qc_status','=','confirm')]}"/>-->
+                                <!--                                    <field name="qc_opacity" attrs="{'readonly':[('qc_status','=','confirm')]}"/>-->
+                                <!--                                </group>-->
+                                <!--                            </group>-->
+                                <!--                            <group>-->
+                                <!--                                <group string="Treatment (Dyne/cm)">-->
+                                <!--                                    <field name="qc_treatment_bt" attrs="{'readonly':[('qc_status','=','confirm')]}"/>-->
+                                <!--                                    <field name="qc_treatment_ct" attrs="{'readonly':[('qc_status','=','confirm')]}"/>-->
+                                <!--                                </group>-->
+                                <!--                                <group>-->
+                                <!--                                    <field name="qc_sit" attrs="{'readonly':[('qc_status','=','confirm')]}"/>-->
+                                <!--                                    <field name="qc_sealing_strength"-->
+                                <!--                                           attrs="{'readonly':[('qc_status','=','confirm')]}"/>-->
+                                <!--                                </group>-->
+                                <!--                            </group>-->
+                                <!--                            <group>-->
+                                <!--                                <group string="COF">-->
+                                <!--                                    <field name="qc_cof_df" attrs="{'readonly':[('qc_status','=','confirm')]}"/>-->
+                                <!--                                    <field name="qc_cof_mdf" attrs="{'readonly':[('qc_status','=','confirm')]}"/>-->
+                                <!--                                </group>-->
+                                <!--                                <group string="Tensile Strength">-->
+                                <!--                                    <field name="qc_tensile_strength_md"-->
+                                <!--                                           attrs="{'readonly':[('qc_status','=','confirm')]}"/>-->
+                                <!--                                    <field name="qc_tensile_strength_td"-->
+                                <!--                                           attrs="{'readonly':[('qc_status','=','confirm')]}"/>-->
+                                <!--                                </group>-->
+                                <!--                            </group>-->
+                                <!--                            <group>-->
+                                <!--                                <group string="Elongation">-->
+                                <!--                                    <field name="qc_elongation_md" attrs="{'readonly':[('qc_status','=','confirm')]}"/>-->
+                                <!--                                    <field name="qc_elongation_td" attrs="{'readonly':[('qc_status','=','confirm')]}"/>-->
+                                <!--                                </group>-->
+                                <!--                                <group>-->
+                                <!--                                    <field name="qc_visual_obs" attrs="{'readonly':[('qc_status','=','confirm')]}"/>-->
+                                <!--                                    <field name="qc_remark"/>-->
+                                <!--                                </group>-->
+                                <!--                            </group>-->
+                                <!--                            <group>-->
+                                <!--                                <group>-->
+                                <!--                                    <field name="include_extra_parameters"/>-->
+                                <!--                                </group>-->
+                                <!--                                <group string="Extra Parameters" attrs="{'invisible':[('include_extra_parameters','=', False)]}">-->
+                                <!--                                    <field name="qc_wvtr"/>-->
+                                <!--                                    <field name="qc_metal_bond_strength"/>-->
+                                <!--                                    <field name="qc_otr"/>-->
+                                <!--                                </group>-->
+<!--                            </group>-->
+                        </page>
+                        <page string="Spot GSM" name="spot_gsm">
+                            <group>
+                                <field name="spot_gsm_ids" widget="many2many_tags"
+                                       attrs="{'readonly': [('qc_status', '=', 'confirm')]}"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="rahil_qc_search_view" model="ir.ui.view">
+        <field name="name">rahil.qc.search.view</field>
+        <field name="model">mrp.work.line</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="qc_status"/>
+                <field name="qc_date"/>
+                <field name="qc_shift"/>
+                <field name="qc_assistant"/>
+                <filter string="Draft" name="state_draft"
+                        domain="[('qc_status', '=', 'draft')]"/>
+                <filter string="Confirm" name="state_confirm"
+                        domain="[('qc_status', '=', 'confirm')]"/>
+                <filter string="Today's Entry" name="today_entry"
+                        domain="[('qc_date', '=', datetime.datetime.now().strftime('%Y-%m-%d 00:00:00'))]"/>
+                <group expand="0" string="Group By">
+                    <filter
+                            name="qc_status"
+                            string="State"
+                            context="{'group_by':'qc_status'}"
+                    />
+                    <filter
+                            name='qc_date'
+                            string="Order By date"
+                            context="{'group_by':'qc_date'}"
+                    />
+                    <filter
+                            name='qc_shift'
+                            string="Order By Shift"
+                            context="{'group_by':'qc_shift'}"
+                    />
+                    <filter
+                            name='qc_assistant'
+                            string="Operator"
+                            context="{'group_by':'qc_assistant'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_qc_entry_rahil" model="ir.actions.act_window">
+        <field name="name">Quality Control</field>
+        <field name="res_model">mrp.work.line</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_qc_entry_rahil_slit" model="ir.actions.act_window">
+        <field name="name">Quality Control</field>
+        <field name="res_model">mrp.work.line</field>
+        <field name="view_mode">tree,form</field>
+         <field name="domain">[('mrp_order.work_order_type','=', 'slit')]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem name="Quality Control" id="qc_rahil_menu" action="action_qc_entry_rahil"
+              sequence="1" parent="mrp.menu_mrp_manufacturing" groups="rahil_mrp.quality_control_user"/>
+    <menuitem name="Slitting rolls" id="qc_rahil_menus" action="action_qc_entry_rahil_slit"
+              sequence="11" parent="mrp.menu_mrp_manufacturing" groups="rahil_mrp.quality_control_user"/>
+
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="paperformat_jumbo_roll" model="report.paperformat">
+        <field name="name">Jumbo Roll Sticker</field>
+        <field name="default" eval="True"/>
+        <field name="format">custom</field>
+        <field name="page_height">100</field>
+        <field name="page_width">100</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">4</field>
+        <field name="margin_bottom">3</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">80</field>
+    </record>
+
+    <record id="jumbo_roll_sticker_action" model="ir.actions.report">
+        <field name="name">Jumbo Roll Sticker</field>
+        <field name="model">mrp.work.line</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="paperformat_id" ref="rahil_mrp.paperformat_jumbo_roll"/>
+        <field name="report_name">rahil_mrp.jumbo_roll_sticker_template</field>
+        <field name="report_file">rahil_mrp.jumbo_roll_sticker_template</field>
+        <field name="print_report_name">'Jumbo roll sticker of %s' % (object.qc_product.name)</field>
+        <field name="binding_model_id" ref="model_stock_production_lot"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>
