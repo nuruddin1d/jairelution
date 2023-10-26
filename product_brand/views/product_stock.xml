@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="product_stock_check" name="Product Stock">
+        <html lang="en">
+            <head>
+                <meta charset="utf-8">
+                    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                        <meta name="viewport" content="width=device-width, initial-scale=1">
+                            <style>
+                                td, th {
+                                border: 1px solid black;
+                                text-align: center;
+                                }
+                                @media screen and (min-width: 480px) and (max-width: 720px) {
+                                .heading{font-size:26px;}
+                                input,button{font-size:22px;padding:8px;}
+                                table{font-size:22px;}
+                                }
+                                @media screen and (min-width: 720px) {
+                                .heading{font-size:42px;}
+                                input,button{font-size:38px;padding:10px;}
+                                table{font-size:36px;}
+                                }
+                            </style>
+                        </meta>
+                    </meta>
+                </meta>
+            </head>
+            <body>
+                <center>
+                    <h2>Product Stock</h2>
+                    <form t-attf-action="/stock/artical/" role="search" method="get">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="search" placeholder="Search Article No."/>
+                            <span class="input-group-append">
+                                <button class="btn btn-primary" type="submit" title="Search">Search
+                                    <i class="fa fa-search"/>
+                                </button>
+                            </span>
+                        </div>
+                    </form>
+                    <table style="border: 1px solid black;">
+                        <thead style="font-size: 21px;">
+                            <tr>
+                                <h6>
+                                    <b>
+                                        <th groups="base.group_user">Image</th>
+                                        <th>Product Name</th>
+                                        <th>Barcode</th>
+                                        <th groups="base.group_user">S.No</th>
+                                        <th groups="base.group_user">MRP</th>
+                                        <th>GS Price</th>
+                                        <th groups="base.group_user">FOC</th>
+                                        <th groups="base.group_user">Specification</th>
+                                    </b>
+                                </h6>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="product_stock" t-as="product">
+                                <t t-if="product.tracking != 'none' and user_type == 'internal'">
+                                <t t-foreach="lot_id" t-as="lot">
+                                    <tr style="font-size: 21px; border: 1px solid black;">
+                                        <td groups="base.group_user">
+                                            <img t-if="product.image_1920"
+                                                 t-att-src="image_data_uri(product.image_1920)"
+                                                 style="max-height:85pt;max-width:90%" alt="Product Image"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="product.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="product.barcode"/>
+                                        </td>
+
+                                        <td groups="base.group_user">
+                                            <span t-esc="lot"/>
+                                        </td>
+                                        <td groups="base.group_user">
+                                            <span t-esc="product.mrp"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="product.list_price"/>
+                                        </td>
+                                        <td groups="base.group_user">
+                                            <span t-esc="product.foc_product_id.name"/>
+                                        </td>
+                                        <td groups="base.group_user">
+                                            <span t-esc="product.specification"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                                </t>
+                                <t t-elif="product.tracking == 'none' or user_type == 'public'">
+                                    <tr style="font-size: 21px; border: 1px solid black;">
+                                        <td groups="base.group_user">
+                                            <img t-if="product.image_1920"
+                                                 t-att-src="image_data_uri(product.image_1920)"
+                                                 style="max-height:85pt;max-width:90%" alt="Product Image"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="product.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="product.barcode"/>
+                                        </td>
+                                        <td groups="base.group_user">
+                                            <span t-esc="product.mrp"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="product.list_price"/>
+                                        </td>
+                                        <td groups="base.group_user">
+                                            <span t-esc="product.foc_product_id.name"/>
+                                        </td>
+                                        <td groups="base.group_user">
+                                            <span t-esc="product.specification"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </t>
+                        </tbody>
+                    </table>
+                </center>
+            </body>
+        </html>
+    </template>
+          <template id="custom_product_template" name="Custom Product Template">
+               <style>
+                                td, th {
+                                border: 1px solid black;
+                                text-align: center;
+                                }
+               </style>
+            <t t-call="website.layout">
+                <!-- Customize the product details section -->
+<!--                <t t-set="product" t-value="request.env['product.template'].sudo().browse(product_id)"/>-->
+                <div class="o_main">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <!-- Display the product image -->
+                                <div class="product-image">
+                                    <img t-att-src="product.image_1920" t-att-alt="product.name" class="img img-fluid product_detail_img mh-100"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-8">
+                                <!-- Add your custom product details here -->
+                                <div class="product-details">
+                                    <!-- Example: Display the product name -->
+                                    <h2 t-field="product.name"/>
+                                    <!-- Example: Display the product description -->
+                                    <p t-field="product.description"/>
+                                    <!-- Example: Display the product price -->
+                                    <h4 t-field="product.list_price"/>
+                                    <!-- Example: Add to cart button -->
+<!--                                    <div class="btn-group">-->
+<!--                                        <a class="btn btn-primary" href="#" role="button">Add to Cart</a>-->
+<!--                                    </div>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table style="margin-left:30%">
+                     <t t-foreach="lot_id" t-as="lot">
+                                    <tr style="font-size: 21px; border: 1px solid black;">
+                                        <td groups="base.group_user">
+                                            <img t-if="product.image_1920"
+                                                 t-att-src="image_data_uri(product.image_1920)"
+                                                 style="max-height:85pt;max-width:90%" alt="Product Image"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="product.name"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="product.barcode"/>
+                                        </td>
+
+                                        <td groups="base.group_user">
+                                            <span t-esc="lot"/>
+                                        </td>
+                                        <td groups="base.group_user">
+                                            <span t-esc="product.mrp"/>
+                                        </td>
+                                        <td>
+                                            <span t-esc="product.list_price"/>
+                                        </td>
+                                        <td groups="base.group_user">
+                                            <span t-esc="product.foc_product_id.name"/>
+                                        </td>
+                                        <td groups="base.group_user">
+                                            <span t-esc="product.specification"/>
+                                        </td>
+                                    </tr>
+                                </t>
+
+                </table>
+            </t>
+        </template>
+
+</odoo>

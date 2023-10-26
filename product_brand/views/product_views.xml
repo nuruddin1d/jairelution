@@ -1,0 +1,155 @@
+<odoo>
+    <data>
+        <record id="product_template_brand_form_view" model="ir.ui.view">
+            <field name="name">product.template.brand.product.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <field name="uom_id" position="before">
+                    <field name="brand_id"/>
+                </field>
+                <xpath expr="//notebook/page/group/group[2]/field[@name='categ_id']"
+                       position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <field name="uom_id" position="before">
+                    <field name="categ_id"/>
+                </field>
+                <xpath expr="//field[@name='supplier_taxes_id']" position="attributes">
+                    <attribute name="required">1</attribute>
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <field name="taxes_id" position="after">
+                    <field name="supplier_taxes_id"/>
+                </field>
+                <field name="uom_po_id" position="after">
+                    <field name="tracking" invisible="0"/>
+                </field>
+<!--                <xpath expr="//page[@name='products']//tree//field[@name='product_tracking']" position="attributes">-->
+<!--                    <attribute name="required">1</attribute>-->
+<!--                    <attribute name="invisible">1</attribute>-->
+<!--                </xpath>-->
+<!--                <xpath expr="//field[@name='tracking']" position="attributes">-->
+<!--                    <attribute name="invisible">1</attribute>-->
+<!--                </xpath>-->
+            </field>
+        </record>
+        <record id="product_template_add_pos" model="ir.ui.view">
+            <field name="name">product.template.brand.product.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                  <xpath expr="//page[@name='general_information']/group[1]" position="inside">
+                     <group name="pos" string="Point of Sale" attrs="{'invisible': [('sale_ok','=',False)]}">
+                        <field name="available_in_pos"/>
+                        <field name="to_weight" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
+                        <field name="pos_categ_id" attrs="{'invisible': [('available_in_pos', '=', False)]}" string="Category"/>
+                    </group>
+                 </xpath>
+            </field>
+        </record>
+        <record id="product_template_inherit_form_view" model="ir.ui.view">
+            <field name="name">product.template.brand.product.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='default_code']"
+                       position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <field name="image_1920" position="replace">
+                    <field name="image_1920" class="oe_avatar" widget="image" options="{'size':[180,180]}"/>
+                </field>
+                <xpath expr="//field[@name='barcode']"
+                       position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <!--                 <xpath expr="//button[@name='action_update_quantity_on_hand']" position="attributes">-->
+                <!--                    <attribute name="groups">product_brand.group_update_button_visible</attribute>-->
+                <!--                </xpath>-->
+                <xpath expr="//button[@name='action_update_quantity_on_hand']" position="attributes">
+                    <attribute name="groups">product_brand.group_update_button_visible</attribute>
+                </xpath>
+                <field name="company_id" position="after">
+                    <field name="default_code" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
+                    <field name="barcode" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
+                </field>
+            </field>
+        </record>
+        <record id="product_template_inherit_form_hsn_view" model="ir.ui.view">
+            <field name="name">product.template.brand.product.hsn.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="l10n_in.product_template_hsn_code"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='l10n_in_hsn_code']"
+                       position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='l10n_in_hsn_description']"
+                       position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <field name="company_id" position="after">
+                    <field name="l10n_in_hsn_code"/>
+                    <field name="l10n_in_hsn_description"/>
+                </field>
+            </field>
+        </record>
+        <record id="product_product_inherit_form_update_qty_view" model="ir.ui.view">
+            <field name="name">product.product.update.qty.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_update_quantity_on_hand']" position="attributes">
+                    <attribute name="groups">product_brand.group_update_button_visible</attribute>
+                </xpath>
+                <field name="image_1920" position="replace">
+                    <field name="image_1920" class="oe_avatar" widget="image" options="{'size':[180,180]}"/>
+                </field>
+                <field name="taxes_id" position="before">
+                    <field name="mrp"/>
+                </field>
+                <field name="default_code" position="after">
+                    <field name="foc_product_id"/>
+                </field>
+                <field name="taxes_id" position="after">
+                    <field name="lmop"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="product_product_kanban_view" model="ir.ui.view">
+            <field name="name">Product Kanban View</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_kanban_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='tags']" position="before">
+                    <div>On Hand:
+                        <field name="qty_available"/>
+                        <field name="uom_id"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+       <record id="gs_view_product_template_form_inherited" model="ir.ui.view">
+            <field name="name">product.form.inherited</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="stock.view_template_property_form"/>
+           <field name="arch" type="xml">
+               <xpath expr="//group[@name='group_lots_and_weight']" position="after">
+                   <group string="Traceability" invisible="1" name="traceability" groups="stock.group_production_lot"
+                          attrs="{'invisible': [('type', '=', 'consu')]}">
+                       <field name="tracking" widget="radio" attrs="{'invisible': [('type', '=', 'service')]}"/>
+                   </group>
+               </xpath>
+           </field>
+       </record>
+
+        <menuitem id="product_variant_menu_root"
+                  name="Product Variant"
+                  action="product.product_normal_action_sell"
+                  groups="product.group_product_variant"
+                  sequence="6"/>
+    </data>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="group_update_button_visible" model="res.groups">
+            <field name="name">Product: Update Qty Button Rights</field>
+            <field name="category_id" ref="base.module_category_extra"/>
+        </record>
+        <record id="stock.menu_valuation" model="ir.ui.menu">
+            <field name="name">Inventory Report</field>
+            <field name="groups_id" eval="[(4, ref('product_brand.group_update_button_visible'))]"/>
+        </record>
+    </data>
+</odoo>
