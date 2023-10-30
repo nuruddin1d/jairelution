@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="ReceiptScreenWhatsApp" t-inherit="point_of_sale.ReceiptScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//form[hasclass('send-email')]" position="after">
+            <form t-on-submit.prevent="onSendWhatsapp" class="send-email">
+                <div class="email-icon"><i class="fa fa-whatsapp" aria-hidden="true"></i></div>
+<!--                <div class="input-email">-->
+<!--                    <input type="number" placeholder="Whatsapp Receipt" t-model="orderUiState.inputWhatsapp" />-->
+<!--                    <button class="send highlight" type="submit">Send</button>-->
+<!--                </div>-->
+                <a class="whatsapp-link" href="https://web.whatsapp.com/" target="_blank">
+                    Contact us on WhatsApp
+                </a>
+            </form>
+            <div>
+               <textarea class="wv_note" rows="5" cols="70" placeholder="Enter your message........" t-model="orderUiState.inputMessage" t-ref="input" name="note"></textarea>
+            </div>
+            <t t-if="orderUiState.whatsappSuccessful !== null">
+	             <div class="notice" t-attf-class="{{ orderUiState.whatsappSuccessful ? 'successful' : 'failed' }}">
+	                 <t t-esc="orderUiState.whatsappNotice"></t>
+	             </div>
+	         </t>
+        </xpath>
+    </t>
+</templates>

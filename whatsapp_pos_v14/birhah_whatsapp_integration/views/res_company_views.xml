@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<odoo>
+    <record model="ir.ui.view" id="birhah_res_company_form">
+        <field name="name">birhah.res.company.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Birhah WP Configuration" name="birhah_whhatsapp">
+                    <group>
+                        <group>
+                            <field name="birhah_access_token"/>
+                            <field name="birhah_instance_id"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="birhah_account_send_wp_message_wizard">
+        <field name="name">birhah.account.invoice.msg.wizard</field>
+        <field name="model">account.invoice.send</field>
+        <field name="inherit_id" ref="account.account_invoice_send_wizard_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//footer" position="inside">
+                <button string="Send Whatsapp Message" type="object"
+                        name="action_whatsapp_message" class="btn-primary"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

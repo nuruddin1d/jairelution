@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="pos_orders_reprint_template" inherit_id="point_of_sale.template" xml:space="preserve">
+	
+
+	<t t-name="WaOrderReprintScreen" owl="1">
+		<div class="receipt-screen screen">
+            <div class="screen-content">
+                <!-- <div class="top-content">
+                    <div class="top-content-center">
+                        <h1 t-if="!env.isMobile">
+                            <t t-esc="orderAmountPlusTip" />
+                        </h1>
+                    </div>
+                    <div class="button next" t-att-class="{ highlight: !locked }"
+                        t-on-click="orderDone">
+                        New Order <i class="fa fa-angle-double-right"></i>
+                    </div>
+                </div> -->
+                <div class="top-content">
+					<span class="button back" t-on-click="back">
+						<i class="fa fa-angle-double-left"></i>
+						<span> </span>
+						<span>Back</span>
+					</span>
+					<div class="top-content-center">
+						<h1> Reprint Order</h1>
+					</div>
+					<span class="button next highlight" t-on-click="back">
+						<span>Ok</span>
+						<span> </span>
+						<i class="fa fa-angle-double-right"></i>
+					</span>
+				</div>
+                <div class="default-view">
+                    <div class="pos-receipt-container">
+						<WaOrderReprintReceipt 
+							order="props.order"
+							loyalty="props.loyalty"
+							client_name="props.client_name"
+							barcode="props.barcode"
+							discount="props.discount"
+							orderlines="props.orderlines"
+							paymentlines="props.paymentlines"
+							change="props.change"
+							subtotal="props.subtotal"	
+							tax="props.tax"
+							user_name="props.user_name"
+							t-ref="order-receipt"			
+						/>
+					</div>
+                    <div class="actions">
+                        <h1>How would you like to receive your receipt?</h1>
+                        <div class="buttons">
+                            <div class="button print" t-on-click="printReceipt">
+                                <i class="fa fa-print"></i> Print Receipt
+                            </div>
+                        </div>
+                        <!-- <form t-on-submit.prevent="onSendEmail" class="send-email">
+                            <div class="email-icon"><i class="fa fa-envelope-o" aria-hidden="true"></i></div>
+                            <div class="input-email">
+                                <input type="email" placeholder="Email Receipt" t-model="orderUiState.inputEmail" />
+                                <button class="send" t-att-class="{ highlight: is_email(orderUiState.inputEmail) }" type="submit">Send</button>
+                            </div>
+                        </form> -->                        
+						<form t-on-submit.prevent="onreSendWhatsapp" class="send-email">   
+			                <div class="email-icon"><i class="fa fa-whatsapp" aria-hidden="true"></i></div>
+			                <div class="input-email">
+			                    <input type="number" placeholder="Whatsapp Receipt" t-model="orderUiState.inputWhatsapp"/>
+			                    <button class="send highlight" type="submit">Send</button>
+			                </div>
+			            </form>
+			            <div>
+			               <p style="margin: 7px;margin-left: 37px;font-size: 17px;font-style: italic;float: left;">Enter your message.</p></div>
+			            <div>
+			               <textarea class="wv_note" rows="5" cols="70" placeholder="Enter your message........" t-model="orderUiState.inputMessage" t-ref="input" name="note"></textarea>
+			            </div>
+			            <t t-if="orderUiState.whatsappSuccessful !== null">
+				             <div class="notice" t-attf-class="{{ orderUiState.whatsappSuccessful ? 'successful' : 'failed' }}">
+				                 <t t-esc="orderUiState.whatsappNotice"></t>
+				             </div>
+				         </t>
+                        <t t-if="orderUiState.emailSuccessful !== null">
+                            <div class="notice" t-attf-class="{{ orderUiState.emailSuccessful ? 'successful' : 'failed' }}">
+                                <t t-esc="orderUiState.emailNotice"></t>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</t>
+
+	<t t-name="WaOrderReprintReceipt" owl="1">
+		<div class="pos-receipt">
+			<img class="pos-receipt-logo" t-att-src='env.pos.company_logo_base64' alt="Logo"/>
+			<br/>
+			<div class="pos-receipt-contact">
+				<t t-if='env.pos.company.contact_address'>
+					<div><t t-esc='env.pos.company.contact_address' /></div>
+				</t>
+				<t t-if='env.pos.company.phone'>
+					<div>Tel:<t t-esc='env.pos.company.phone' /></div>
+				</t>
+				<t t-if='env.pos.company.vat'>
+					<div>VAT:<t t-esc='env.pos.company.vat' /></div>
+				</t>
+				<t t-if='env.pos.company.email'>
+					<div><t t-esc='env.pos.company.email' /></div>
+				</t>
+				<t t-if='env.pos.company.website'>
+					<div><t t-esc='env.pos.company.website' /></div>
+				</t>
+				<br/>
+				
+				<t t-if='props.user_name'>
+					<div class='cashier'>
+						<div>--------------------------------</div>
+						<div>Served by <t t-esc='props.user_name' /></div>
+					</div>
+				</t>
+			</div>
+			<br /><br />
+			<div class='orderlines'>
+				<t t-foreach='props.orderlines' t-as='line'>
+					<t t-set='simple' t-value='(line.discount === 0 and line.qty === 1)' />
+					<div t-if='simple'>
+						<t t-esc="line.product_id"/>
+						<span t-esc='env.pos.format_currency_no_symbol(line.total_price)' class="price_display pos-receipt-right-align"/>
+					</div>
+					<t t-if='!simple'>
+						<div t-esc='line.product_id'/>
+						<t t-if='line.discount !== 0'>
+							<div class="pos-receipt-left-padding">
+								<t t-esc="env.pos.format_currency_no_symbol(line.price_unit)"/>
+							</div>
+							<div class="pos-receipt-left-padding">
+								Discount: <t t-esc='line.discount' />%
+							</div>
+						</t>
+						<div class="pos-receipt-left-padding">
+							<t t-esc="Math.round(line.qty)"/>
+							x
+							<t t-esc='env.pos.format_currency_no_symbol(line.total_price/line.qty)' />
+							<span class="price_display pos-receipt-right-align">
+								<t t-esc='env.pos.format_currency_no_symbol(line.total_price)'/>
+							</span>
+						</div>
+					</t>
+				</t>
+			</div>
+			<div class="pos-receipt-right-align">--------</div>
+			<br/>
+			<div class="pos-receipt-amount">
+				TOTAL
+				<span t-esc='env.pos.format_currency(props.order.amount_total)' class="pos-receipt-right-align"/>
+			</div>
+			<br/><br/>
+			<t t-foreach='props.paymentlines' t-as='line'>
+				<div>
+					<t t-esc='line.name' />
+					<span t-esc='env.pos.format_currency_no_symbol(line.amount)' class="pos-receipt-right-align"/>
+				</div>
+			</t>
+			<br/>
+			<div class="pos-receipt-amount receipt-change">
+				CHANGE
+				<span t-esc='env.pos.format_currency(-props.change)' class="pos-receipt-right-align"/>
+			</div>
+			<br/>
+			<t t-if='discount_total'>
+				<div>
+					Discounts
+					<span t-esc='env.pos.format_currency(props.discount)' class="pos-receipt-right-align"/>
+				</div>
+			</t>
+			<div>
+				Total Taxes
+				<span t-esc='env.pos.format_currency(props.tax)' class="pos-receipt-right-align"/>
+			</div>
+			<div class='before-footer'/>
+			<br/>
+			<div class="pos-receipt-order-data">
+				<div><t t-esc='props.order.pos_reference' /></div>
+				<div><t t-esc='props.order.date_order' /></div>
+				
+			</div>
+			<t t-if="env.pos.config.show_barcode">
+				<div>
+					<span style="display:none;" t-esc="receiptBarcode"/>
+					<div style="margin:auto;margin-top:10px;" id="barcode_print1"></div>
+				</div>
+			</t>
+		</div>
+	</t>
+
+
+</templates>
+
+

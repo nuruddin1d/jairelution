@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--<odoo>-->
+<!--    <templates id="template" xml:space="preserve">-->
+<!--        <t t-name="PosWhatsApp">-->
+<!--            <div>-->
+<!--                <button class="whatsapp-button">Send WhatsApp Message</button>-->
+<!--            </div>-->
+<!--        </t>-->
+<!--    </templates>-->
+<!--</odoo>-->
+
+<odoo>
+    <template id="template">
+            <t t-name="PosWhatsApp">
+                <div>
+                    <button class="whatsapp-button">Send WhatsApp Message</button>
+                </div>
+            </t>
+        </template>
+</odoo>
+
+<!--<odoo>-->
+<!--    <data>-->
+<!--        <template id="point_of_sale_assets" inherit_id="point_of_sale.assets">-->
+<!--            <xpath expr="." position="inside">-->
+<!--                <script type="text/javascript" src="/your_module/static/src/js/pos_whatsapp.js"></script>-->
+<!--            </xpath>-->
+<!--        </template>-->
+
+<!--        <template id="point_of_sale_custom" inherit_id="point_of_sale.point_of_sale_custom_template">-->
+<!--            <xpath expr="//div[contains(@class,'pos-right-content')]" position="before">-->
+<!--                <a class="whatsapp-link" href="https://wa.me/1234567890" target="_blank">-->
+<!--                    Contact us on WhatsApp-->
+<!--                </a>-->
+<!--            </xpath>-->
+<!--        </template>-->
+<!--    </data>-->
+<!--</odoo>-->
